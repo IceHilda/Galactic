@@ -1,71 +1,70 @@
 import pygame
-import numpy
+import numpy as np
 from player import Player
 import draw
+import copy
 from level_one import cockpit
+
 pygame.init()
 
+# Pygame screen parameters
 WIDTH = 800
 HEIGHT = 600
+FPS = 10  # Updates per second
+room_offset = (100, 100)  # How far in the window is the room drawn
 
 astronaut = Player(130, 150)
 planet_image = pygame.image.load("images/mars.png")
 ship_image = pygame.image.load("images/ship.png")
 bg_image = pygame.image.load("images/backdrop.jpg")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space the Final Frontier")
+pygame.display.set_caption("Galactic: The Final Frontier")
 running = True
 clock = pygame.time.Clock()
-#pygame.
 
-ship_location = [130, 150]
+walkable_spaces = [0, 10]
 
 while running:
-
-    #check user input
-
+    old_location = copy.copy(astronaut.location)
+    # Check user input
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        # elif event.type == pygame.KEYDOWN:
-        #     astronaut.frame = (astronaut.frame+1) % 5
-        #     if event.key == pygame.K_LEFT:
-        #         astronaut.direction = "left"
-        #         astronaut.location[0] -= astronaut.speed
-        #     elif event.key == pygame.K_RIGHT:
-        #         astronaut.direction = "right"
-        #         astronaut.location[0] += astronaut.speed
-        #     elif event.key == pygame.K_UP:
-        #         astronaut.direction = "up"
-        #         astronaut.location[1] -= astronaut.speed
-        #     elif event.key == pygame.K_DOWN:
-        #         astronaut.direction = "down"
-        #         astronaut.location[1] += astronaut.speed
+    # Look at all keys being pressed
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         astronaut.frame = (astronaut.frame + 1) % 5
         astronaut.direction = "left"
         astronaut.location[0] -= astronaut.speed
-    if keys[pygame.K_RIGHT]:
+    elif keys[pygame.K_RIGHT]:
         astronaut.frame = (astronaut.frame + 1) % 5
         astronaut.direction = "right"
         astronaut.location[0] += astronaut.speed
-    if keys[pygame.K_UP]:
+    elif keys[pygame.K_UP]:
         astronaut.frame = (astronaut.frame + 1) % 5
         astronaut.direction = "up"
         astronaut.location[1] -= astronaut.speed
-    if keys[pygame.K_DOWN]:
+    elif keys[pygame.K_DOWN]:
         astronaut.frame = (astronaut.frame + 1) % 5
         astronaut.direction = "down"
         astronaut.location[1] += astronaut.speed
 
+    # Simple collision test
+    player_to_grid_x = (astronaut.location[0] - room_offset[0]) / 30
+    player_to_grid_y = (astronaut.location[1] - room_offset[1]) / 30
+
+    if cockpit[int(player_to_grid_y), int(player_to_grid_x)] not in walkable_spaces:
+        astronaut.location = old_location
+
+    # Draw everything
     screen.blit(bg_image, (0, 0))
-    draw.draw_room(screen, cockpit, (100, 100))
+    #draw.draw_floor(screen, cockpit, room_offset)
+    draw.draw_room(screen, cockpit, room_offset)
     draw.draw_player(screen, astronaut)
-    #screen.blit(planet_image, (50, 50))
-    #screen.blit(ship_image, ship_location)
+    #draw.draw_room(screen, cockpit, room_offset)
+    # Update the screen
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(FPS)
 
 pygame.quit()
 

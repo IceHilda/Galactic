@@ -5,7 +5,7 @@ class Player:
     def __init__(self, start_x, start_y):
         self.location = [start_x, start_y]
         self.frame = 0
-        self.speed = 10
+        self.speed = 15
         self.direction = "down"
         self.sprite = {
             "left": [pygame.image.load("images/spacesuit_left.png"),
