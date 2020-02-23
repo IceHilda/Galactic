@@ -32,11 +32,15 @@ def terminal_game(screen, clock):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+                elif event.key == pygame.K_BACKSPACE:
+                    user_string = user_string[:-1]
+
                 else:
                     user_string += type_text(chr(event.key))
-                    user_message = terminal_font.render(input_prompt+user_string, True, text_color)
+
                     if user_string == "test":
                         running = False
+                user_message = terminal_font.render(input_prompt + user_string, True, text_color)
                     # print(f"User string: {user_string}")
         # Look at all keys being pressed
         # keys = pygame.key.get_pressed()
