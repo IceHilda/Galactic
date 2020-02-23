@@ -4,6 +4,7 @@ from player import Player
 import draw
 import copy
 from level_one import cockpit
+import terminal
 
 pygame.init()
 
@@ -25,11 +26,22 @@ clock = pygame.time.Clock()
 walkable_spaces = [0, 10]
 
 while running:
+    player_to_grid_x = (astronaut.location[0] - room_offset[0]) / 30
+    player_to_grid_y = (astronaut.location[1] - room_offset[1]) / 30
     old_location = copy.copy(astronaut.location)
     # Check user input
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                # Check for object usage
+                if cockpit[int(player_to_grid_y), int(player_to_grid_x) - 1] == 0:
+                    # Todo: Make this much more accurate
+                    print("Computer hacking detected")
+                    terminal.terminal_game(screen, clock)
+            elif event.key == pygame.K_ESCAPE:
+                running = False
     # Look at all keys being pressed
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
@@ -50,9 +62,6 @@ while running:
         astronaut.location[1] += astronaut.speed
 
     # Simple collision test
-    player_to_grid_x = (astronaut.location[0] - room_offset[0]) / 30
-    player_to_grid_y = (astronaut.location[1] - room_offset[1]) / 30
-
     if cockpit[int(player_to_grid_y), int(player_to_grid_x)] not in walkable_spaces:
         astronaut.location = old_location
 
