@@ -8,12 +8,13 @@ def terminal_game(screen, clock):
     y = 200
     black = (0, 0, 0) #RGB values
     text_color = (0, 255, 0)
-    window = (150, 150, 500, 300)
+    window = (50, 50, 700, 500)
 
+    bg_image = pygame.image.load('images/pc-border-2.png')
     terminal_font = pygame.font.SysFont('courier', 16)
     welcome_message = terminal_font.render("SpaceLinux v 0.0.1 Copyright SpaceMine Inc.", True, text_color)
     puzzle_message = terminal_font.render("The Elusive answer lies within reach, do you See iT?", True, text_color)
-    input_prompt = "Captain@Galactic-bridge$ "
+    input_prompt = "Captain@bridge:~$ "
     user_string = ""
     user_message = terminal_font.render(input_prompt+user_string, True, text_color)
 
@@ -21,9 +22,10 @@ def terminal_game(screen, clock):
     computer_screen = pygame.Surface((x, y))
     while running:
         pygame.draw.rect(screen, black, window)
-        screen.blit(welcome_message, (150, 150))
-        screen.blit(puzzle_message, (150, 200))
-        screen.blit(user_message, (160, 400))
+        screen.blit(bg_image, (50, 50))
+        screen.blit(welcome_message, (112, 105))
+        screen.blit(puzzle_message, (112, 105+welcome_message.get_height()))
+        screen.blit(user_message, (112, 480))
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
