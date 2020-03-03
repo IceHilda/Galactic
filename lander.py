@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 
 pygame.init()
 
@@ -7,7 +8,6 @@ WIDTH = 800
 HEIGHT = 600
 FPS = 24  # Updates per second
 
-pad_location = 300
 x_speed = 0
 y_speed = 0
 fuel = 100
@@ -29,6 +29,20 @@ pygame.display.set_caption("Lunar Lander")
 running = True
 clock = pygame.time.Clock()
 
+# Draw landing pad
+pad_location = np.random.randint(0, 740)
+
+terminal_font = pygame.font.SysFont('courier', 24)
+
+
+def show_msg(msg, color=(0, 255, 0)):
+    rendered_msg = terminal_font.render(msg, True, color)
+    screen.blit(rendered_msg, ((WIDTH-rendered_msg.get_width())/2, (HEIGHT-rendered_msg.get_height())/2))
+    pygame.display.flip()
+    # Wait for input, then return
+    pygame.time.wait(2000)
+    return
+
 
 while running:
     # Draw everything
@@ -48,12 +62,12 @@ while running:
     # At or below baseline
     if ship_location[1] + ship_image.get_height() >= HEIGHT-30:
         if y_speed > 10 or x_speed > 5:
+            show_msg("LOSE", (255, 0, 0))
             print("lose")
         elif ship_location[0] < pad_location or ship_location[0] > pad_location + 60:
-            print("lose")
+            show_msg("LOSE", (255, 0, 0))
         else:
-            print("win")
-        pygame.time.wait(500)
+            show_msg("WIN", (0, 255, 0))
         running = False
 
     for event in pygame.event.get():
